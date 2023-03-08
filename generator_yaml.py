@@ -1,5 +1,5 @@
 import argparse
-import aux.paramsAnalizer as paramsAnalizer
+from aux_packet import params_analizer
 
 def main():
     # Definimos el parser
@@ -17,9 +17,9 @@ def main():
     # Extraemos los argumentos
     args = parser.parse_args()
     if not args.output:
-        salida = paramsAnalizer.generate_out_file(extent=".yaml")
+        salida = params_analizer.generate_out_file(extent=".yaml")
     else:
-        salida = paramsAnalizer.generate_out_file(".yaml", name= args.output)
+        salida = params_analizer.generate_out_file(".yaml", name= args.output)
 
 
     # Escribimos los argumentos introducidos en el fichero .yaml de salida

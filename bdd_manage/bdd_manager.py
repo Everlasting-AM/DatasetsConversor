@@ -2,7 +2,7 @@ import ijson
 import DatasetAdapter
 import bdd_manage.bdd_cat_manager as bdd_cat_manager
 import bdd_manage.bdd_img_manager as bdd_img_manager
-import BDDLabelManager
+import bdd_manage.bdd_label_manager as bdd_lbl_manager
 import os
 
 class BddManager(DatasetAdapter.DatasetAdapter):
@@ -25,7 +25,7 @@ class BddManager(DatasetAdapter.DatasetAdapter):
         # Creamos los managers auxiliares
         self.catManager = bdd_cat_manager.BddCatManager(self.labels)
         self.img_manager = bdd_img_manager.BddImgManager(self.labels)
-        self.lbl_manager = BDDLabelManager.BDDLabelManager(self.labels, self.input)
+        self.lbl_manager = bdd_lbl_manager.BDDLabelManager(self.labels, self.input)
     
     def check_args(input: str, val:int):
         """

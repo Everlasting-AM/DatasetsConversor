@@ -1,7 +1,6 @@
 import importlib
 import DatasetAdapter
 
-
 class DatasetFactory:
     """Factoría de adaptadores para los datasets"""
     _instace = None
@@ -23,12 +22,13 @@ class DatasetFactory:
             DatasetAdapter: adaptador de dataset 
         """
         # Classname == modulename
-        classname = format + "Manager"
-        package = format + "Manage"
+        class_name = format.capitalize() 
+        module_name = format.lower() + "_manager"
+        package_name = format.lower() + "_manage"
         
         # Extraemos el módulo y la clase
-        module = importlib.import_module(classname, package)
-        Adaptador = getattr(module, classname)
+        module = importlib.import_module(module_name, package_name)
+        Adaptador = getattr(module, class_name)
         return Adaptador(input)
         
         

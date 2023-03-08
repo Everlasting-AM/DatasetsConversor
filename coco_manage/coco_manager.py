@@ -1,5 +1,5 @@
 import DatasetAdapter
-from . import CocoImgManager, CocoAnntManager, CocoCatManager
+from . import coco_annt_manager, coco_cat_manager, coco_img_manager
 from pycocotools.coco import COCO
 import os
 
@@ -15,9 +15,9 @@ class CocoManager(DatasetAdapter.DatasetAdapter):
         data = CocoManager.find_dataset(self.basedir)
         if data:
             self.coco = COCO(data)
-            self.anntManager: CocoAnntManager.CocoAnntManager = CocoAnntManager.CocoAnntManager(self.coco)
-            self.catManager: CocoCatManager.CocoCatManager = CocoCatManager.CocoCatManager(self.coco)
-            self.imgManager: CocoImgManager.CocoImgManager = CocoImgManager.CocoImgManager(self.coco)
+            self.anntManager: coco_annt_manager.CocoAnntManager = coco_annt_manager.CocoAnntManager(self.coco)
+            self.catManager: coco_cat_manager.CocoCatManager = coco_cat_manager.CocoCatManager(self.coco)
+            self.imgManager: coco_img_manager.CocoImgManager = coco_img_manager.CocoImgManager(self.coco)
         else:
             exit("Dataset incorrecto")
     

@@ -17,7 +17,7 @@ def get_normalized_bbox(bbox: tuple[int, int, int, int], image: str):
     # Devolvemos el bbox normalizado
     return (bbox[0]/ancho, bbox[1]/alto, bbox[2]/ancho, bbox[3]/alto)
     
-class BDDLabelManager:
+class BddLabelManager:
     def __init__(self, labels: list[str], basedir: str) -> None:
         """
             Crea un manager para gestionar las etiquetas
