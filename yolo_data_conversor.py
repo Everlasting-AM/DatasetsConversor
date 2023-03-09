@@ -1,5 +1,5 @@
 import argparse
-from CocoManage import CocoManager
+from dataset_factory import DatasetFactory
 from graphics_items import CheckBoxList
 import os
 
@@ -19,10 +19,13 @@ def check_arguments(args: argparse.Namespace):
         exit("ERROR: La salida indicada ya existe y es un fichero")
     if not os.path.isdir(args.output):
         print("Creating the output dir")
-        os.mkdir(args.output)
+        if not os.path.isdir(args.output):
+            os.mkdir(args.output)
     #try:
-    os.mkdir(os.path.join(args.output, IMAGE_DIR))
-    os.mkdir(os.path.join(args.output, LABELS_DIR))
+    if not os.path.isdir(os.path.join(args.output, IMAGE_DIR)):
+        os.mkdir(os.path.join(args.output, IMAGE_DIR))
+    if not os.path.isdir(os.path.join(args.output, LABELS_DIR)):
+        os.mkdir(os.path.join(args.output, LABELS_DIR))
     #except Exception:
         
     #exit("ERROR: no se han podido crear los subdirectorios {} y {}"-format(
@@ -42,7 +45,8 @@ def select_cats_wind(lista) -> list[str]:
 def main(args):
     check_arguments(args)
     # Creamos el manager
-    manager = CocoManager.CocoManager(args.dataset, args.val)
+
+    manager = DatasetFactory().get_adapter(args.format, args.dataset)
     lista = select_cats_wind(manager.show_cats_names())
     manager.filter_elements_category(lista)
     manager.generate_cats_file(args.output)

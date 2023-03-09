@@ -16,3 +16,7 @@ class DatasetAdapter(abc.ABC):
     @abc.abstractclassmethod
     def show_cats_names(self) -> list[str]:
         pass
+    
+    @abc.abstractclassmethod
+    def generate_images_filtered(self, output: str):
+        pass

@@ -1,5 +1,5 @@
 import argparse
-from aux_packet import params_analizer
+import aux_packet.params_analizer as params_analizer
 
 def main():
     # Definimos el parser

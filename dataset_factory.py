@@ -22,12 +22,12 @@ class DatasetFactory:
             DatasetAdapter: adaptador de dataset 
         """
         # Classname == modulename
-        class_name = format.capitalize() 
-        module_name = format.lower() + "_manager"
+        class_name = format.capitalize() + "Manager"
+        module_name = '.' + format.lower() + "_manager"
         package_name = format.lower() + "_manage"
         
         # Extraemos el módulo y la clase
-        module = importlib.import_module(module_name, package_name)
+        module = importlib.import_module(module_name, package=package_name)
         Adaptador = getattr(module, class_name)
         return Adaptador(input)
         

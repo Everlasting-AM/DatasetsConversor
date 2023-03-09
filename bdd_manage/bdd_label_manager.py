@@ -2,6 +2,7 @@ import os
 import cv2
 
 NAME_LABELS_DIR = "labels"
+NAME_IMAGE_DIR = "images"
 
 def get_normalized_bbox(bbox: tuple[int, int, int, int], image: str):
     """
@@ -26,7 +27,7 @@ class BddLabelManager:
             basedir (str): directorio base del dataset
         """
         self.data = labels
-        self.basedir = os.join(basedir, NAME_LABELS_DIR)
+        self.basedir = basedir
     
     def filter_labels(self, cats: list[str]):
         """
@@ -39,7 +40,9 @@ class BddLabelManager:
         # guardamos en la lista
         for record in self.data:
             lbls = []
-            lbls.append(lbl for lbl in lbls if lbl['category'] in cats)
+            for lbl in record['labels']:
+                if lbl['category'] in cats:
+                    lbls.append(lbl)
             record['labels'] = lbls
     
     def generate_labels_files(self, outdir: str, cats: list[str]):
@@ -53,11 +56,13 @@ class BddLabelManager:
         ids = list(range(0, len(cats)))
         # Para cada registro, creamos un archivo .txt y guardamos la info
         for record in self.data:
-            filename = os.path.join(self.basedir, 
-                                    os.path.splitext(record['name'])[0])
-            with open(os.path.join(outdir, filename+".txt"), "w") as f:
+            filename = os.path.splitext(record['name'])[0]
+            fileroute = os.path.join(self.basedir, NAME_IMAGE_DIR, record['name'])
+            with open(os.path.join(outdir, NAME_LABELS_DIR,filename+".txt"), "w") as f:
                 for lbl in record['labels']:
-                    bbox = get_normalized_bbox(lbl['box2d'])
+                    x1, x2 = lbl['box2d']['x1'], lbl['box2d']['x2']
+                    y1, y2 = lbl['box2d']['y1'], lbl['box2d']['y2']
+                    bbox = get_normalized_bbox((x1, y1, x2, y2), fileroute)
                     f.write("{} {} {} {} {}".format(
                          ids[cats.index(lbl['category'])], bbox[0], bbox[1], 
                          bbox[2], bbox[3]
@@ -71,9 +76,9 @@ class BddLabelManager:
             image (str): ruta de la imagen
         """
         # Obtenemos las dimensiones de la imagen
+        print("IMAGEN: ",image)
         imagen = cv2.imread(image)
         ancho, alto, _ = imagen.shape
-        
         # Devolvemos el bbox normalizado
         return (bbox[0]/ancho, bbox[1]/alto, bbox[2]/ancho, bbox[3]/alto)
         

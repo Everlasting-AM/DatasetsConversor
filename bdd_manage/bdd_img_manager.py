@@ -27,8 +27,10 @@ class BddImgManager:
         # Obtenemos los registros que tienen algún elemento relevante
         filtered_records = []
         for record in self.data:
-            if any(lbl['category'] in cats for lbl in record["labels"]):
-                filtered_records = record
+            for lbl in record["labels"]:
+                if lbl["category"] in cats:
+                    filtered_records.append(record)
+                    break
         # Actualizamos los datos
         self.data = filtered_records
         return filtered_records
@@ -41,8 +43,9 @@ class BddImgManager:
             basedir (str): directorio base donde se encuentran las imágenes
             outdir (str): directorio destino donde se copiarán las imágenes
         """
-        dir_images = os.path.join(basedir, )
+        dir_images = os.path.join(basedir, NAME_IMAGES_DIR)
         for record in self.data:
-            filename = os.join(basedir, record['name'])
-        shutil.copy(filename, os.join(outdir, record['name']))
+            filename = os.path.join(dir_images, record['name'])
+            salida = os.path.join(outdir, NAME_IMAGES_DIR)
+            shutil.copy(filename, os.path.join(salida, record['name']))
     
