@@ -13,7 +13,7 @@ class OICatManager:
 
     def extract_categories(self):
         """
-            Devuelve una lista con ĺos nombres de las categorías en fomrato 
+            Devuelve una lista con ĺos nombres de las categorías en formato 
             textual para la lectura de estas.
         """ 
         nombres = self.df['Category']
@@ -27,5 +27,16 @@ class OICatManager:
             ident (str): cadena identificadora de la categoría
         """
         fila = self.df.loc[self.df['LabelName'] == ident]
-        nombre = fila['Category'].values(0) if not fila.empty else None
+        nombre = fila['Category'].values[0] if not fila.empty else None
         return nombre
+
+    def get_codename_cat(self, name: str):
+        """
+            Devuelve el código asociado a una categoría a partir 
+            de su nombre textual
+
+            :params name: nombre textual de la catgoría
+        """
+        fila = self.df.loc[self.df['Category'] == name]
+        code = fila['LabelName'].values[0] if not fila.empty else None
+        return code

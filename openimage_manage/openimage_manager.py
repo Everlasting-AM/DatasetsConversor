@@ -1,6 +1,9 @@
 import os
 from filenames import CATEGORIES_FILE, IMAGES_DIR, LABELS_DIR, LABELS_FILE
 from DatasetAdapter import DatasetAdapter
+from oi_cat_manager import OICatManager
+from oi_img_manager import OIImgManager
+from oi_lbl_manager import OILblManager
 
 def check_arguments(input:str):
     """
@@ -25,8 +28,27 @@ def check_arguments(input:str):
     else: 
         raise ValueError("La entrada debe ser la ruta del directorio del dataset")
 
+def get_inform_files(input: str):
+    return os.path.join(input, LABELS_DIR,LABELS_FILE), os.path.join(input, LABELS_DIR, CATEGORIES_FILE)
+
 class OpenImageManager(DatasetAdapter):
     def __init__(self, input: str) -> None:
         check_arguments(input)
         self.basename = input
+        self.lbls, self.cats = get_inform_files(input)
+        self.cat_manager = OICatManager(self.cats)
+
+    def filter_elements_category(self, cats: list[str]):
+        codes = [self.cat_manager.get_codename_cat(cat) for cat in cats]
     
+    def generate_anns_yolo(self, dir_out: str):
+        pass
+    
+    def generate_cats_file(self, fileout: str):
+        pass
+    
+    def show_cats_names(self) -> list[str]:
+        pass
+    
+    def generate_images_filtered(self, output: str):
+        pass
