@@ -91,3 +91,6 @@ class OpenImageManager(DatasetAdapter):
         input_images = os.join(self.basename, IMAGES_INPUT_DIR)
         output_dir = os.join(output, IMAGES_OUT_DIR)
         self.img_manager.copy_files(input_images, output_dir)
+    
+
+    

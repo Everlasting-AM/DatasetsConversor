@@ -56,6 +56,8 @@ class BddLabelManager:
         ids = list(range(0, len(cats)))
         # Para cada registro, creamos un archivo .txt y guardamos la info
         for record in self.data:
+            if not record['labels']:
+                continue
             filename = os.path.splitext(record['name'])[0]
             fileroute = os.path.join(self.basedir, NAME_IMAGE_DIR, record['name'])
             with open(os.path.join(outdir, NAME_LABELS_DIR,filename+".txt"), "w") as f:
