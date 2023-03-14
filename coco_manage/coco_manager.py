@@ -39,7 +39,6 @@ class CocoManager(DatasetAdapter.DatasetAdapter):
                     return os.path.join(anotaciones, elem)
         raise ValueError("ERROR: no se ha encontrado ningún archivo .json en la carpeta ")
 
-
     def check_arguments(self, input: str):
         """
             Comprueba si el nombre del dataset de entrada es válido
