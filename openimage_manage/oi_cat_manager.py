@@ -1,5 +1,5 @@
 import pandas as pd
-from filenames import CAT_CODE_COLUMN_NAME, CAT_NAME_COLUMN_NAME
+from .filenames import CAT_CODE_COLUMN_NAME, CAT_NAME_COLUMN_NAME
 class OICatManager:
     
     def __init__(self, input: str) -> None:
@@ -52,8 +52,12 @@ class OICatManager:
                 f.write('{}\n'.format(name))
         
     
-    def filter_categories(self, cats: list[str]):
+    def filter_categories(self, cats: list[str] = None, ids: list[str] = None):
         """
             Cambia el conjunto de categorías seleccionadas 
         """
-        self.df = self.df.loc[self.df[CAT_NAME_COLUMN_NAME] in cats]
+        if cats is not None:
+            self.df = self.df.loc[self.df[CAT_NAME_COLUMN_NAME].isin(cats)]
+        if ids is not None:
+            print(ids)
+            self.df = self.df.loc[self.df[CAT_CODE_COLUMN_NAME].isin(ids)]

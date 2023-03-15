@@ -21,3 +21,4 @@ CATS_FILENAME = 'classes.names'
 
 # OUTPUT FILES
 IMAGES_OUT_DIR = 'images'
+LBLS_OUT_DIR = 'labels'

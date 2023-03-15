@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import shutil
-from filenames import IMG_ID_COL
+from .filenames import IMG_ID_COL
 
 class OIImgManager:
     def __init__(self, images_dir: str) -> None:
@@ -26,3 +26,7 @@ class OIImgManager:
             name, ext = os.path.splitext(img)
             if name in names:
                 shutil.copy(os.path.join(indir, img), os.path.join(outdir, img))
+    
+    def get_images_ids(self):
+        return [os.path.splitext(name)[0] for name in self.imgs]
+

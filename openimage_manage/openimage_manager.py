@@ -1,11 +1,11 @@
 import os
-from filenames import (CATEGORIES_INPUT_FILE, IMAGES_INPUT_DIR, 
-                       LABELS_INPUT_DIR, LABELS_INPUT_FILE, 
-                       CATS_FILENAME, IMAGES_OUT_DIR)
 from DatasetAdapter import DatasetAdapter
-from oi_cat_manager import OICatManager
-from oi_img_manager import OIImgManager
-from oi_lbl_manager import OILblManager
+from .oi_cat_manager import OICatManager
+from .oi_img_manager import OIImgManager
+from .oi_lbl_manager import OILblManager
+from .filenames import (CATEGORIES_INPUT_FILE, IMAGES_INPUT_DIR, 
+                       LABELS_INPUT_DIR, LABELS_INPUT_FILE, 
+                       CATS_FILENAME, IMAGES_OUT_DIR, LBLS_OUT_DIR, CAT_CODE_COL)
 
 def check_arguments(input:str):
     """
@@ -21,12 +21,10 @@ def check_arguments(input:str):
             raise FileNotFoundError("No se ha encontrado la carpeta images")
         elif not LABELS_INPUT_DIR in content:
             raise FileNotFoundError("No se ha encontrado la carpeta labels")
-        elif LABELS_INPUT_FILE in os.listdir(os.path.join(input, LABELS_INPUT_DIR)):
-            raise FileNotFoundError("""No se ha encontrado el archivo labels.csv
-                                    dentro de {}""".format(os.path.join(input, LABELS_INPUT_DIR)))
-        elif CATEGORIES_INPUT_FILE in os.listdir(os.path.join(input, LABELS_INPUT_DIR)):
-            raise FileNotFoundError("""No se ha encontrado el archivo de etiquetas
-                                    dentro de {}""".format(os.path.join(input, LABELS_INPUT_DIR)))
+        elif LABELS_INPUT_FILE not in os.listdir(os.path.join(input, LABELS_INPUT_DIR)):
+            raise FileNotFoundError("""No se ha encontrado el archivo {} dentro de {}""".format(LABELS_INPUT_FILE, os.path.join(input, LABELS_INPUT_DIR)))
+        elif CATEGORIES_INPUT_FILE not in os.listdir(os.path.join(input, LABELS_INPUT_DIR)):
+            raise FileNotFoundError("""No se ha encontrado el archivo de etiquetas {} dentro de {}""".format(CATEGORIES_INPUT_FILE, os.path.join(input, LABELS_INPUT_DIR)))
     else: 
         raise ValueError("La entrada debe ser la ruta del directorio del dataset")
 
@@ -36,7 +34,7 @@ def get_inform_files(input: str):
     """
     return os.path.join(input, LABELS_INPUT_DIR,LABELS_INPUT_FILE), os.path.join(input, LABELS_INPUT_DIR, CATEGORIES_INPUT_FILE)
 
-class OpenImageManager(DatasetAdapter):
+class OpenimageManager(DatasetAdapter):
     def __init__(self, input: str) -> None:
         check_arguments(input)
         self.basename = input
@@ -44,6 +42,12 @@ class OpenImageManager(DatasetAdapter):
         self.cat_manager = OICatManager(self.cats)
         self.img_manager = OIImgManager(os.path.join(self.basename, IMAGES_INPUT_DIR))
         self.lbl_manager = OILblManager(self.lbls)
+        self.cat_manager.filter_categories
+        
+        # Realizamos limpieza inicial del dataset de etiquetas y categorías
+        self.lbl_manager.remove_labels_no_image(self.img_manager.get_images_ids())
+        codes = self.lbl_manager.extract_to_label(CAT_CODE_COL)
+        self.cat_manager.filter_categories(ids=codes)
 
 
     def filter_elements_category(self, cats: list[str]):
@@ -64,6 +68,8 @@ class OpenImageManager(DatasetAdapter):
         """
             Generamos el archivo de anotaciones en el formato YOLO
         """
+        
+        dir_out = os.path.join(dir_out, LBLS_OUT_DIR)
         self.lbl_manager.generate_lbls_files(dir_out, self.codes)
     
     def generate_cats_file(self, basedir_out: str):
@@ -88,8 +94,8 @@ class OpenImageManager(DatasetAdapter):
 
             :param output: directorio donde se copiarán las imágenes filtradas
         """
-        input_images = os.join(self.basename, IMAGES_INPUT_DIR)
-        output_dir = os.join(output, IMAGES_OUT_DIR)
+        input_images = os.path.join(self.basename, IMAGES_INPUT_DIR)
+        output_dir = os.path.join(output, IMAGES_OUT_DIR)
         self.img_manager.copy_files(input_images, output_dir)
     
 
