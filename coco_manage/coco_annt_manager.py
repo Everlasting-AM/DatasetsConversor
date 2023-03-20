@@ -71,7 +71,7 @@ class CocoAnntManager:
                 for ann in anns:
                     bbox = ann["bbox"]                
                     file.write("{} {} {} {} {}\n".format(ann["category_id"], 
-                    bbox[0]/ancho, bbox[1]/alto, bbox[2]/ancho, bbox[3]/alto))
+                    (bbox[0]+bbox[2]/2)/ancho, (bbox[1]+bbox[3]/2)/alto, bbox[2]/ancho, bbox[3]/alto))
     
     def save_annotations(anns: list, filename: str)-> None:
         """
